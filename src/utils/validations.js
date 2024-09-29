@@ -4,7 +4,7 @@ const User=require("../models/user")
 
 const validateSignUp=function(req){
     const {firstName,lastName,email,password}=req.body;
-    console.log(password)
+    // console.log(password)
     if(!firstName || !lastName){
         throw new Error("Enter valid name")
     }
@@ -17,7 +17,7 @@ const validateSignUp=function(req){
     // else if(userExists(email)){
     //     throw new Error("User with this email already exists")
     // }
-    console.log("no issue here at validations")
+    // console.log("no issue here at validations")
 }
 
 const validatePassword=function(req){
@@ -30,7 +30,7 @@ const validatePassword=function(req){
 
 const userExists= async function(emailId){
     const user=await User.findOne({email:emailId})
-    console.log(user)
+    // console.log(user)
     if(user){
         return true
     }

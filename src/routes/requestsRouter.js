@@ -12,14 +12,14 @@ requestRouter.post("/request/send/:status/:userId",userAuth, async (req,res)=>{
         let fromUserId=req.user._id
         let toUserId=req.params.userId
         let status=req.params.status
-        console.log(fromUserId,toUserId,status)
+        // console.log(fromUserId,toUserId,status)
         let allowedStatuses=["interested","ignored"]
         if(!allowedStatuses.includes(status)){
             return res.status(404).json({message:"Not a request with valid status"})
         }
         const userExists=await User.findOne({_id:toUserId})
         if(!userExists){
-            return res.status(404).json({message:"User doesn't exist, Can not send connection request"})
+            return res.status(404).json({message:"User doesn't exist, Cannot send connection request"})
         }
         let requestExist=await connectionRequest.findOne({
             $or:[
@@ -53,6 +53,7 @@ requestRouter.post("/request/review/:status/:requestId",userAuth,async (req,res)
     try{
         let loggedInUser=req.user
         let {status,requestId}=req.params;
+        // console.log(status,requestId)
         let allowedStatus=["accepted","rejected"]
         if(!allowedStatus.includes(status)){
             // console.log(status)

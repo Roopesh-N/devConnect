@@ -16,7 +16,7 @@ profileRouter.get("/profile/view",userAuth, async (req,res)=>{
 })
 
 // to edit user profile
-profileRouter.get("/profile/edit",userAuth,async (req,res)=>{
+profileRouter.patch("/profile/edit",userAuth,async (req,res)=>{
     try{
         // validate the update data
         if(!validateProfileEdit(req)){
@@ -25,7 +25,9 @@ profileRouter.get("/profile/edit",userAuth,async (req,res)=>{
         let loggedInUser=req.user;
         Object.keys(req.body).every((key)=>loggedInUser[key]=req.body[key])
         await loggedInUser.save()
-        res.send(`User ${loggedInUser.firstName} : Updated successfully`)
+        res.json({message:`User ${loggedInUser.firstName} : Updated successfully`,
+            data:loggedInUser
+        })
     }catch(error){
         res.status(404).send("User data not updated")
     }
@@ -41,10 +43,10 @@ profileRouter.patch("/profile/password", userAuth ,async (req,res)=>{
         }
         let loggedInUser=req.user;
         const hashedpwd=await bcrypt.hash(password,10);
-        console.log(hashedpwd)
+        // console.log(hashedpwd)
         loggedInUser.password=hashedpwd;
         await loggedInUser.save()
-        console.log(loggedInUser)
+        // console.log(loggedInUser)
         res.send(`User ${loggedInUser.firstName} : password Updated successfully`)
 
     }catch(error){

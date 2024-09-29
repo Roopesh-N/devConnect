@@ -2,11 +2,12 @@
 const jwt=require("jsonwebtoken");
 const User=require("../models/user");
 
-const userAuth= async (req,res,next)=>{
+const userAuth = async (req,res,next)=>{
     try{
         const {token}=req.cookies;
         if(!token){
-            throw new Error("Token not available")
+
+            return res.status(401).send("Token not available")
         }
         const decodedMessage=await jwt.verify(token,"Dev@Connect")
         const {_id}=decodedMessage;
@@ -15,6 +16,7 @@ const userAuth= async (req,res,next)=>{
             throw new Error("user not found")
         }
         req.user=user
+        // console.log(user.firstName)
         next();
 
     }catch(error){

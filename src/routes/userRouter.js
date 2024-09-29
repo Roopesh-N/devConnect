@@ -11,12 +11,11 @@ let SAFE_FIELDS="firstName lastName  age skills gender about photoUrl"
 userRouter.get("/user/requests/received",userAuth, async (req,res)=>{
     try{
         let loggedInuser=req.user;
-        console.log(loggedInuser._id)
         const connectionRequests=await connectionRequest.find({
             toUserId:loggedInuser._id,
             status:"interested"
         }).populate("fromUserId",SAFE_FIELDS)
-        console.log(connectionRequests)
+        // console.log(connectionRequests)
         res.json({
             message:"ConnectionRequests",
             data:connectionRequests
@@ -43,7 +42,7 @@ userRouter.get("/user/connections",userAuth,async (req,res)=>{
             if(loggedInUser._id.toString()===each.fromUserId._id.toString()){
                 return each.toUserId;
             }
-            console.log(each.fromUserId.firstName)
+            // console.log(each.fromUserId.firstName)
             return each.fromUserId;
         }
     );
@@ -60,16 +59,16 @@ userRouter.get("/feed", userAuth, async (req,res)=>{
     try{
         let loggedInUser=req.user;
         
-        let page=parseInt(req.query.page) ||10;
+        let page=parseInt(req.query.page) || 1;
         let limit=parseInt(req.query.limit) ||10;
         limit=limit>50?50:limit;
-        let skip=(page-1)*limit  
-
+        let skip=(page-1)*limit
         let connections=await connectionRequest.find({
             $or:[{fromUserId:loggedInUser._id },{toUserId:loggedInUser._id}]
         }).select("fromUserId toUserId");
 
         let hideProfiles=new Set();
+        hideProfiles.add(loggedInUser._id.toString())
         connections.forEach((conn)=>{
             hideProfiles.add(conn.fromUserId.toString())
             hideProfiles.add(conn.toUserId.toString())
